@@ -1,3 +1,3 @@
 ﻿
-using var game = new Wiselike.Game1();
+using var game = new Wiselike.Main();
 game.Run();
