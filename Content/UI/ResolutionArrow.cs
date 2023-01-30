@@ -15,20 +15,18 @@ namespace Wiselike.Content.UI
 {
     public class ResolutionArrow : UIButton
     {
+        bool balls;
         public ResolutionArrow(Texture2D texture) : base(texture)
         {
 
         }
         public override void Click()
         {
-
-            if (Main.CurrentResolution >= 0 && Main.CurrentResolution < Main.ScreenWidths.Length - 1)
-            {
-                Main.CurrentResolution++;
-                Main.graphics.PreferredBackBufferWidth = Main.ScreenWidths[Main.CurrentResolution];
-                Main.graphics.PreferredBackBufferHeight = Main.ScreenHeights[Main.CurrentResolution];
-                Main.graphics.ApplyChanges();
-            }
+        }
+        public override void Update(GameTime gameTime)
+        {
+            //Position = new Vector2(Main.ScreenWidths[Main.CurrentResolution] / 2f, Main.ScreenHeights[Main.CurrentResolution] / 2f);
+            base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
