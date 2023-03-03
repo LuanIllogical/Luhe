@@ -11,17 +11,20 @@ using MonoGame.Extended.Input.InputListeners;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 
-namespace Wiselike.Content.UI
+namespace Luhe.Content.UI
 {
-    public class ResolutionArrow : UIButton
+    public class GameChangerButton : UIButton
     {
-        bool balls;
-        public ResolutionArrow(Texture2D texture) : base(texture)
+        public Jogo Jogo;
+        public GameChangerButton(Texture2D texture, Jogo jogo) : base(texture)
         {
-
+            Jogo = jogo;
         }
         public override void Click()
         {
+            //Unintialize
+            Main.JogoAtual = Jogo;
+            Main.JogoAtual.Initialize();
         }
         public override void Update(GameTime gameTime)
         {
@@ -32,7 +35,7 @@ namespace Wiselike.Content.UI
         {
             if (IsHovering)
             {
-                Color = Color.Red;
+                Color = Color.LightGray;
             }
             else
             {

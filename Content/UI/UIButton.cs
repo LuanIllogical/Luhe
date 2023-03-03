@@ -11,7 +11,7 @@ using MonoGame.Extended.Input.InputListeners;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 
-namespace Wiselike.Content.UI
+namespace Luhe.Content.UI
 {
     public class UIButton : UIElement
     {

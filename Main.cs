@@ -7,17 +7,16 @@ using MonoGame.Extended.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Wiselike.Content.UI;
+using Luhe.Content.UI;
 
-namespace Wiselike
+namespace Luhe
 {
     public class Main : Game
     {
         public static GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
 
-        public Color BackgroundColor = Color.Orange;
-        private List<UIElement> UIElements;
+        public Color BackgroundColor = new Color(14, 120, 196);
 
         public MouseStateWrapper mouseWrapper;
         public static Vector2 MousePosition;
@@ -28,6 +27,14 @@ namespace Wiselike
         public static Rectangle RenderTargetDestination;
 
         Color LetterboxingColor = new Color(0, 0, 0);
+
+        public static Jogo JogoAtual;
+
+        public static Dictionary<string, Texture2D> LoadedTextures = new Dictionary<string, Texture2D>();
+
+        public static Random Random;
+
+        public SpriteFont Font;
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -54,36 +61,21 @@ namespace Wiselike
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            /*RenderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                GraphicsDevice.PresentationParameters.BackBufferWidth,
-                GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-            */
             RenderTarget = new RenderTarget2D(GraphicsDevice, GameResolution.X, GameResolution.Y);
             RenderTargetDestination = GetRenderTargetDestination(GameResolution, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             mouseWrapper = new MouseStateWrapper(true);
+            Random = new Random();
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            var randomButton = new ResolutionArrow(Content.Load<Texture2D>("UI/Arrow"))
-            {
-                Position = new Vector2(graphics.PreferredBackBufferWidth / 2f, graphics.PreferredBackBufferHeight / 2f),
-                //Text = "Random"
-            };
-
-            UIElements = new List<UIElement>()
-            {
-                randomButton
-            };
-
-            // TODO: use this.Content to load your game content here
+            LoadedTextures["Flecha"] = Content.Load<Texture2D>("UI/Arrow");
+            LoadedTextures["MagicRectangle"] = Content.Load<Texture2D>("UI/MagicRectangle");
+            Font = Content.Load<SpriteFont>("Fonts/Font");
+            JogoAtual = new Menu(graphics, spriteBatch, Font);
+            JogoAtual.Initialize();
         }
         protected override void Update(GameTime gameTime)
         {
@@ -91,12 +83,8 @@ namespace Wiselike
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //Update UIElements
-            foreach (var uiElement in UIElements)
-            {
-                uiElement.Update(gameTime);
-            }
-            //Set correct Mouse position;
+            JogoAtual.Update(gameTime);
+
             float resolutionRatio = (float)GameResolution.X / GameResolution.Y;
             float screenRatio;
             Point bounds = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
@@ -122,13 +110,10 @@ namespace Wiselike
             GraphicsDevice.Clear(LetterboxingColor);
 
             spriteBatch.Begin();
-            GraphicsDevice.Clear(BackgroundColor);
-            foreach (var uiElement in UIElements)
-            {
-                uiElement.Draw(gameTime, spriteBatch);
-            }
+            GraphicsDevice.Clear(JogoAtual.BackgroundColor);
 
-            spriteBatch.Draw(Content.Load<Texture2D>("UI/Arrow"), new Vector2(MousePosition.X, MousePosition.Y), Color.Blue);
+            JogoAtual.Draw(gameTime, spriteBatch);
+
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
@@ -157,7 +142,6 @@ namespace Wiselike
                 scale = (float)bounds.X / resolution.X;
             else
             {
-                // Resolution and window/screen share aspect ratio
                 rectangle.Size = bounds;
                 return rectangle;
             }

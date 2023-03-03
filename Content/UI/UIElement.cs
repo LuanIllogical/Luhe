@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using MonoGame.Extended.Input.InputListeners;
 using MonoGame.Extended.Input;
 
-namespace Wiselike.Content.UI
+namespace Luhe.Content.UI
 {
     public class UIElement
     {
