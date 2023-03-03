@@ -16,14 +16,15 @@ namespace Luhe
         public Menu(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, SpriteFont font) : base(graphics, spriteBatch, font)
         {
             Tipo = 0;
-            BackgroundColor = Color.Blue;
+            BackgroundColor = Color.Orange;
         }
 
         public override void Initialize()
         {
-            var SnakeButton = new GameChangerButton(Main.LoadedTextures["Flecha"], new MathSnake(graphics, spriteBatch, Font))
+            var SnakeButton = new SnakeButton(Main.LoadedTextures["MathSnakeButton"], new MathSnake(graphics, spriteBatch, Font))
             {
-                Position = new Vector2(graphics.PreferredBackBufferWidth / 2f, graphics.PreferredBackBufferHeight / 2f)
+                Position = new Vector2(Main.RenderTargetDestination.Width * 0.05f, Main.RenderTargetDestination.Height * 0.05f),
+                Outline = Main.LoadedTextures["MathSnakeButtonOutline"]
             };
             UIElements = new List<UIElement>()
             {
@@ -43,8 +44,23 @@ namespace Luhe
             {
                 uiElement.Draw(gameTime, spriteBatch);
             }
-
-            spriteBatch.Draw(Main.LoadedTextures["Flecha"], new Vector2(Main.MousePosition.X, Main.MousePosition.Y), Color.Blue);
         }
     }
+    public class SnakeButton : GameChangerButton
+    {
+        public Texture2D Outline;
+        public SnakeButton(Texture2D texture, Jogo jogo) : base (texture, jogo)
+        {
+            Jogo = jogo;
+        }
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, Rectangle, Color);
+            if (IsHovering)
+            {
+                spriteBatch.Draw(Outline, Rectangle, Color.White);
+            }
+        }
+    }
+
 }

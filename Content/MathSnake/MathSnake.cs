@@ -15,6 +15,7 @@ using MonoGame.Extended.Collisions;
 using static Luhe.MathSnake;
 using MonoGame.Extended.BitmapFonts;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Luhe
 {
@@ -44,6 +45,10 @@ namespace Luhe
 
         public int BackgroundOffsetX;
         public int BackgroundOffsetY;
+
+        public SoundEffectInstance Move;
+        public SoundEffectInstance Collect;
+        public SoundEffectInstance Die;
         public MathSnake(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, SpriteFont font) : base(graphics, spriteBatch, font)
         {
             Tipo = 1;
@@ -56,6 +61,9 @@ namespace Luhe
             BackgroundOffsetX = (int)(Main.RenderTargetDestination.Width / 2f - 288);
             BackgroundOffsetY = (int)(Main.RenderTargetDestination.Height / 2f) - 288;
             OurSnake.Cells.Add(new Vector2(12, 12));
+            Move = Main.LoadedSounds["MathSnakeMove"].CreateInstance();
+            Collect = Main.LoadedSounds["MathSnakeCollect"].CreateInstance();
+            Die = Main.LoadedSounds["MathSnakeDie"].CreateInstance();
         }
         public override void Update(GameTime gameTime)
         {
@@ -87,29 +95,42 @@ namespace Luhe
             if (Wait == 0)
             {
                 KeyboardState state = Keyboard.GetState();
+                float pitch = (float)Main.Random.NextDouble() * 0.5f;
                 if (state.IsKeyDown(Keys.Left) && OurSnake.DX == 0)
                 {
                     OurSnake.DX = -Grid;
                     OurSnake.DY = 0;
                     SnakeReborn = true;
+                    Move.Stop();
+                    Move.Pitch = pitch;
+                    Move.Play();
                 }
                 else if (state.IsKeyDown(Keys.Up) && OurSnake.DY == 0)
                 {
                     OurSnake.DY = -Grid;
                     OurSnake.DX = 0;
                     SnakeReborn = true;
+                    Move.Stop();
+                    Move.Pitch = pitch;
+                    Move.Play();
                 }
                 else if (state.IsKeyDown(Keys.Right) && OurSnake.DX == 0)
                 {
                     OurSnake.DX = Grid;
                     OurSnake.DY = 0;
                     SnakeReborn = true;
+                    Move.Stop();
+                    Move.Pitch = pitch;
+                    Move.Play();
                 }
                 else if (state.IsKeyDown(Keys.Down) && OurSnake.DY == 0)
                 {
                     OurSnake.DY = Grid;
                     OurSnake.DX = 0;
                     SnakeReborn = true;
+                    Move.Stop();
+                    Move.Pitch = pitch;
+                    Move.Play();
                 }
                 if (SnakeDead && SnakeReborn)
                 {
@@ -205,6 +226,7 @@ namespace Luhe
 
                                 Phase = 2;
                                 Points += 15;
+                                Collect.Play();
                             }
                             else if (Phase == 2)
                             {
@@ -224,6 +246,7 @@ namespace Luhe
 
                                 Phase = 3;
                                 Points += 40;
+                                Collect.Play();
                             }
                             else if (Phase == 3)
                             {
@@ -265,7 +288,8 @@ namespace Luhe
                                 Wait = 10;
 
                                 Phase = 4;
-                                Points += 65; 
+                                Points += 65;
+                                Collect.Play();
                             }
                             else
                             {
@@ -288,16 +312,18 @@ namespace Luhe
 
                                     Phase = 1;
                                     Points += 125;
+                                    Collect.Play();
                                 }
                                 else
                                 {
                                     if (SnakeDead == false)
                                     {
-                                        /*
-                                        soundDie.stop();
-                                        soundDie.currentTime = 0;
-                                        soundDie.play();
-                                        */
+                                    /*
+                                    soundDie.stop();
+                                    soundDie.currentTime = 0;
+                                    soundDie.play();
+                                    */
+                                        Die.Play();
                                     }
                                     SnakeDead = true;
                                 }
@@ -314,38 +340,30 @@ namespace Luhe
                         {
                             if (SnakeDead == false)
                             {
-                                /*
-                                soundDie.stop();
-                                soundDie.currentTime = 0;
-                                soundDie.play();
-                                */
+                            /*
+                            soundDie.stop();
+                            soundDie.currentTime = 0;
+                            soundDie.play();
+                            */
+                                Die.Play();
                             }
                             SnakeDead = true;
+                            
                         }
                     }
                     if (OurSnake.X < 0 || OurSnake.X >= 576 || OurSnake.Y < 0 || OurSnake.Y >= 576)
                     {
                         if (SnakeDead == false)
                         {
-                            /*
-                            soundDie.stop();
-                            soundDie.currentTime = 0;
-                            soundDie.play();
-                            */
+                        /*
+                        soundDie.stop();
+                        soundDie.currentTime = 0;
+                        soundDie.play();
+                        */
+                            Die.Play();
                         }
                         SnakeDead = true;
-                }
-                    /*
-                    if (SnakeDead == true)
-                    {
-                        context.fillStyle = "#ccefff";
-                        context.font = "40px Consolas";
-                        context.fillText("Game Over", 300, 380)
-                        context.font = "34px Consolas";
-                        context.fillText("Aperte qualquer seta para reiniciar", 75, 420)
-                        context.fillStyle = "#7dd5f0";
                     }
-                    */
                 }
             if (!SnakeDead)
             {
@@ -420,6 +438,12 @@ namespace Luhe
             {
                 spriteBatch.Draw(Main.LoadedTextures["MagicRectangle"], new Rectangle((int)OurSnake.Cells[OurSnake.Cells.Count - 1].X + 3 + 4 + BackgroundOffsetX, (int)OurSnake.Cells[OurSnake.Cells.Count - 1].Y + 3 + 16 + BackgroundOffsetY, 6, 6), new Color(255, 234, 0));
                 spriteBatch.Draw(Main.LoadedTextures["MagicRectangle"], new Rectangle((int)OurSnake.Cells[OurSnake.Cells.Count - 1].X + 3 + 16 + BackgroundOffsetX, (int)OurSnake.Cells[OurSnake.Cells.Count - 1].Y + 3 + 16 + BackgroundOffsetY, 6, 6), new Color(255, 234, 0));
+
+            }
+            if (SnakeDead == true)
+            {
+                spriteBatch.DrawString(Font, "Game Over", new Vector2(Main.RenderTargetDestination.Width * 0.5f - Font.MeasureString("Game Over").X * 1.4f / 2f, Main.RenderTargetDestination.Height * 0.4f - Font.MeasureString("Game Over").Y / 2f), new Color(204, 239, 255), 0f, default, 1.4f, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(Font, "Aperte qualquer seta para reiniciar", new Vector2(Main.RenderTargetDestination.Width * 0.5f - Font.MeasureString("Aperte qualquer seta para reiniciar").X / 2f, Main.RenderTargetDestination.Height * 0.5f - Font.MeasureString("Aperte qualquer seta para reiniciar").Y / 2f), new Color(204, 239, 255), 0f, default, 1f, SpriteEffects.None, 1f);
 
             }
         }

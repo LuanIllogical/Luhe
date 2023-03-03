@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Luhe.Content.UI;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Luhe
 {
@@ -31,6 +32,7 @@ namespace Luhe
         public static Jogo JogoAtual;
 
         public static Dictionary<string, Texture2D> LoadedTextures = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, SoundEffect> LoadedSounds = new Dictionary<string, SoundEffect>();
 
         public static Random Random;
 
@@ -71,9 +73,18 @@ namespace Luhe
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             LoadedTextures["Flecha"] = Content.Load<Texture2D>("UI/Arrow");
             LoadedTextures["MagicRectangle"] = Content.Load<Texture2D>("UI/MagicRectangle");
+            LoadedTextures["MathSnakeButton"] = Content.Load<Texture2D>("UI/MathSnakeButton");
+            LoadedTextures["MathSnakeButtonOutline"] = Content.Load<Texture2D>("UI/MathSnakeButtonOutline");
+
+            LoadedSounds["MathSnakeMove"] = Content.Load<SoundEffect>("Sounds/MathSnakeMove");
+            LoadedSounds["MathSnakeCollect"] = Content.Load<SoundEffect>("Sounds/MathSnakeCollect");
+            LoadedSounds["MathSnakeDie"] = Content.Load<SoundEffect>("Sounds/MathSnakeDie");
+
             Font = Content.Load<SpriteFont>("Fonts/Font");
+
             JogoAtual = new Menu(graphics, spriteBatch, Font);
             JogoAtual.Initialize();
         }
