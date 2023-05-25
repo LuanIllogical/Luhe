@@ -26,6 +26,7 @@ namespace Luhe
         public string SecondNumber = "□";
         public string Result = "?";
         public int Points;
+        public int Highscore;
 
         public int Grid = 32;
         public int Count = 0;
@@ -34,8 +35,12 @@ namespace Luhe
 
         public int Wait = 0;
 
+        public bool Auto;
+
         //Sons
 
+        public List<string> EquationsFinished1 = new List<string>();
+        public List<string> EquationsFinished2 = new List<string>();
         public List<NumberObject> Numbers = new List<NumberObject>();
         public string Operation;
         public int Phase;
@@ -60,7 +65,7 @@ namespace Luhe
             OurSnake = new Snake();
             BackgroundOffsetX = (int)(Main.RenderTargetDestination.Width / 2f - 288);
             BackgroundOffsetY = (int)(Main.RenderTargetDestination.Height / 2f) - 288;
-            OurSnake.Cells.Add(new Vector2(12, 12));
+            OurSnake.Cells.Add(new Vector2(5 * 32, 5 * 32));
             Move = Main.LoadedSounds["MathSnakeMove"].CreateInstance();
             Collect = Main.LoadedSounds["MathSnakeCollect"].CreateInstance();
             Die = Main.LoadedSounds["MathSnakeDie"].CreateInstance();
@@ -84,23 +89,67 @@ namespace Luhe
                 {
                     NumberObject thisNumber = new NumberObject();
                     thisNumber.Number = Main.Random.Next(1, 10).ToString();
-                    thisNumber.X = GetNumberSpawn();
-                    thisNumber.X = GetNumberSpawn();
+                    var numberSpawn = GetNumberSpawn();
+                    thisNumber.Y = (int)numberSpawn.Y;
+                    thisNumber.X = (int)numberSpawn.X;
                     Numbers.Add(thisNumber);
                 }
                 Phase = 1;
             }
             //Sons
-            var SnakeReborn = false;
             if (Wait == 0)
             {
                 KeyboardState state = Keyboard.GetState();
                 float pitch = (float)Main.Random.NextDouble() * 0.5f;
+                if (state.IsKeyDown(Keys.Back))
+                {
+                    Main.JogoAtual = new Menu(graphics, spriteBatch, Font);
+                    Main.JogoAtual.Initialize();
+                }
+                if (state.IsKeyDown(Keys.K))
+                {
+                    Auto = !Auto;
+                }
+                if (SnakeDead)
+                {
+                    if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.Down))
+                    {
+                        SnakeDead = false;
+                        OurSnake.X = 160;
+                        OurSnake.Y = 160;
+                        OurSnake.Cells = new List<Vector2>();
+                        OurSnake.MaxCells = 4;
+                        OurSnake.DX = Grid;
+                        OurSnake.DY = 0;
+                        Wait = 0;
+                        Phase = 1;
+                        FirstNumber = "□";
+                        Operator = "□";
+                        SecondNumber = "□";
+
+                        if (Points > Highscore)
+                        {
+                            Highscore = Points;
+                        }
+
+                        Points = 0;
+
+                        for (int i5 = 0; i5 < 6; i5++)
+                        {
+                            Numbers[i5].Number = Main.Random.Next(1, 10).ToString();
+                            var numberSpawn = GetNumberSpawn();
+                            Numbers[i5].X = (int)numberSpawn.X;
+                            Numbers[i5].Y = (int)numberSpawn.Y;
+                        }
+                    }
+                }
+                if (Auto)
+                {
+                }
                 if (state.IsKeyDown(Keys.Left) && OurSnake.DX == 0)
                 {
                     OurSnake.DX = -Grid;
                     OurSnake.DY = 0;
-                    SnakeReborn = true;
                     Move.Stop();
                     Move.Pitch = pitch;
                     Move.Play();
@@ -109,7 +158,6 @@ namespace Luhe
                 {
                     OurSnake.DY = -Grid;
                     OurSnake.DX = 0;
-                    SnakeReborn = true;
                     Move.Stop();
                     Move.Pitch = pitch;
                     Move.Play();
@@ -117,8 +165,7 @@ namespace Luhe
                 else if (state.IsKeyDown(Keys.Right) && OurSnake.DX == 0)
                 {
                     OurSnake.DX = Grid;
-                    OurSnake.DY = 0;
-                    SnakeReborn = true;
+                    OurSnake.DY = 0;;
                     Move.Stop();
                     Move.Pitch = pitch;
                     Move.Play();
@@ -127,33 +174,9 @@ namespace Luhe
                 {
                     OurSnake.DY = Grid;
                     OurSnake.DX = 0;
-                    SnakeReborn = true;
                     Move.Stop();
                     Move.Pitch = pitch;
                     Move.Play();
-                }
-                if (SnakeDead && SnakeReborn)
-                {
-                    SnakeDead = false;
-                    OurSnake.X = 160;
-                    OurSnake.Y = 160;
-                    OurSnake.Cells = new List<Vector2>();
-                    OurSnake.MaxCells = 4;
-                    OurSnake.DX = Grid;
-                    OurSnake.DY = 0;
-                    Wait = 0;
-                    Phase = 1;
-                    FirstNumber = "□";
-                    Operator = "□";
-                    SecondNumber = "□";
-                    Points = 0;
-
-                    for (int i5 = 0; i5 < 6; i5++)
-                    {
-                        Numbers[i5].Number = Main.Random.Next(1, 10).ToString();
-                        Numbers[i5].X = GetNumberSpawn();
-                        Numbers[i5].Y = GetNumberSpawn();
-                    }
                 }
                 if (SnakeDead == false)
                 {
@@ -186,30 +209,36 @@ namespace Luhe
                                 FirstNumber = Numbers[i2].Number.ToString();
 
                                 Numbers[0].Number = "+";
-                                Numbers[0].X = GetNumberSpawn();
-                                Numbers[0].Y = GetNumberSpawn();
+                                var numberSpawn = GetNumberSpawn();
+                                Numbers[0].X = (int)numberSpawn.X;
+                                Numbers[0].Y = (int)numberSpawn.Y;
                                 while (Numbers[0].X == OurSnake.Cells[i].X && Numbers[0].Y == OurSnake.Cells[i].Y)
                                 {
-                                    Numbers[0].X = GetNumberSpawn();
-                                    Numbers[0].Y = GetNumberSpawn();
+                                    numberSpawn = GetNumberSpawn();
+                                    Numbers[0].X = (int)numberSpawn.X;
+                                    Numbers[0].Y = (int)numberSpawn.Y;
                                 }
 
                                 Numbers[1].Number = "-";
-                                Numbers[1].X = GetNumberSpawn();
-                                Numbers[1].Y = GetNumberSpawn();
+                                numberSpawn = GetNumberSpawn();
+                                Numbers[1].X = (int)numberSpawn.X;
+                                Numbers[1].Y = (int)numberSpawn.Y;
                                 while (Numbers[1].X == OurSnake.Cells[i].X && Numbers[1].Y == OurSnake.Cells[i].Y)
                                 {
-                                    Numbers[1].X = GetNumberSpawn();
-                                    Numbers[1].Y = GetNumberSpawn();
+                                    numberSpawn = GetNumberSpawn();
+                                    Numbers[1].X = (int)numberSpawn.X;
+                                    Numbers[1].Y = (int)numberSpawn.Y;
                                 }
 
                                 Numbers[2].Number = "×";
-                                Numbers[2].X = GetNumberSpawn();
-                                Numbers[2].Y = GetNumberSpawn();
+                                numberSpawn = GetNumberSpawn();
+                                Numbers[2].X = (int)numberSpawn.X;
+                                Numbers[2].Y = (int)numberSpawn.Y;
                                 while (Numbers[2].X == OurSnake.Cells[i].X && Numbers[2].Y == OurSnake.Cells[i].Y)
                                 {
-                                    Numbers[2].X = GetNumberSpawn();
-                                    Numbers[2].Y = GetNumberSpawn();
+                                    numberSpawn = GetNumberSpawn();
+                                    Numbers[2].X = (int)numberSpawn.X;
+                                    Numbers[2].Y = (int)numberSpawn.Y;
                                 }
 
                                 Numbers[3].Number = "";
@@ -235,12 +264,14 @@ namespace Luhe
                                 for (int i3 = 0; i3 < 6; i3++)
                                 {
                                     Numbers[i3].Number = Main.Random.Next(1, 10).ToString();
-                                    Numbers[i3].X = GetNumberSpawn();
-                                    Numbers[i3].Y = GetNumberSpawn();
+                                    var numberSpawn = GetNumberSpawn();
+                                    Numbers[i3].X = (int)numberSpawn.X;
+                                    Numbers[i3].Y = (int)numberSpawn.Y;
                                     while (Numbers[i3].X == OurSnake.Cells[i].X && Numbers[i3].Y == OurSnake.Cells[i].Y)
                                     {
-                                        Numbers[i3].X = GetNumberSpawn();
-                                        Numbers[i3].Y = GetNumberSpawn();
+                                        numberSpawn = GetNumberSpawn();
+                                        Numbers[i3].X = (int)numberSpawn.X;
+                                        Numbers[i3].Y = (int)numberSpawn.Y;
                                     }
                                 }
 
@@ -266,23 +297,27 @@ namespace Luhe
                                 }
 
                                 Numbers[0].Number = CorrectAnswer.ToString();
-                                Numbers[0].X = GetNumberSpawn();
-                                Numbers[0].Y = GetNumberSpawn();
+                                var numberSpawn = GetNumberSpawn();
+                                Numbers[0].X = (int)numberSpawn.X;
+                                Numbers[0].Y = (int)numberSpawn.Y;
                                 while (Numbers[0].X == OurSnake.Cells[i].X && Numbers[0].Y == OurSnake.Cells[i].Y)
                                 {
-                                    Numbers[0].X = GetNumberSpawn();
-                                    Numbers[0].Y = GetNumberSpawn();
+                                    numberSpawn = GetNumberSpawn();
+                                    Numbers[0].X = (int)numberSpawn.X;
+                                    Numbers[0].Y = (int)numberSpawn.Y;
                                 }
 
                                 for (int i4 = 1; i4 < 6; i4++)
                                 {
                                     Numbers[i4].Number = (CorrectAnswer + Main.Random.Next(-10, 10)).ToString();
-                                    Numbers[i4].X = GetNumberSpawn();
-                                    Numbers[i4].Y = GetNumberSpawn();
+                                    numberSpawn = GetNumberSpawn();
+                                    Numbers[i4].X = (int)numberSpawn.X;
+                                    Numbers[i4].Y = (int)numberSpawn.Y;
                                     while (Numbers[i4].X == OurSnake.Cells[i].X && Numbers[i4].Y == OurSnake.Cells[i].Y)
                                     {
-                                        Numbers[i4].X = GetNumberSpawn();
-                                        Numbers[i4].Y = GetNumberSpawn();
+                                        numberSpawn = GetNumberSpawn();
+                                        Numbers[i4].X = (int)numberSpawn.X;
+                                        Numbers[i4].Y = (int)numberSpawn.Y;
                                     }
                                 }
                                 Wait = 10;
@@ -298,14 +333,25 @@ namespace Luhe
                                     for (int i5 = 0; i5 < 6; i5++)
                                     {
                                         Numbers[i5].Number = Main.Random.Next(1, 10).ToString();
-                                        Numbers[i5].X = GetNumberSpawn();
-                                        Numbers[i5].Y = GetNumberSpawn();
+                                        var numberSpawn = GetNumberSpawn();
+                                        Numbers[i5].X = (int)numberSpawn.X;
+                                        Numbers[i5].Y = (int)numberSpawn.Y;
                                         while (Numbers[i5].X == OurSnake.Cells[i].X && Numbers[i5].Y == OurSnake.Cells[i].Y)
                                         {
-                                            Numbers[i5].X = GetNumberSpawn();
-                                            Numbers[i5].Y = GetNumberSpawn();
+                                            numberSpawn = GetNumberSpawn();
+                                            Numbers[i5].X = (int)numberSpawn.X;
+                                            Numbers[i5].Y = (int)numberSpawn.Y;
                                         }
                                     }
+                                    if (EquationsFinished1.Count == EquationsFinished2.Count)
+                                    {
+                                        EquationsFinished1.Add(FirstNumber + " " + Operator + " " + SecondNumber + " = " + CorrectAnswer);
+                                    }
+                                    else
+                                    {
+                                        EquationsFinished2.Add(FirstNumber + " " + Operator + " " + SecondNumber + " = " + CorrectAnswer);
+                                    }
+
                                     FirstNumber = "□";
                                     Operator = "□";
                                     SecondNumber = "□";
@@ -382,6 +428,17 @@ namespace Luhe
             spriteBatch.DrawString(Font, "=", new Vector2(Main.RenderTargetDestination.Width / 2f + 25 - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
             spriteBatch.DrawString(Font, Result, new Vector2(Main.RenderTargetDestination.Width / 2f + 50 - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
             spriteBatch.DrawString(Font, "Pontos: " + Points, new Vector2(Main.RenderTargetDestination.Width * 0.05f - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
+            spriteBatch.DrawString(Font, "Highscore: " + Highscore, new Vector2(Main.RenderTargetDestination.Width * 0.875f - Font.MeasureString("Highscore: " + Highscore).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
+            //FIX MEASURESTRING SECONDNUMBER
+
+            for (var i = 0; i < EquationsFinished1.Count; i++)
+            {
+                spriteBatch.DrawString(Font, EquationsFinished1[i], new Vector2(Main.RenderTargetDestination.Width / 2f - 500 - Font.MeasureString(EquationsFinished1[i]).X / 2f, Main.RenderTargetDestination.Height * 0.025f + 50 + (35 * i)), Color.White);
+            }
+            for (var i = 0; i < EquationsFinished2.Count; i++)
+            {
+                spriteBatch.DrawString(Font, EquationsFinished2[i], new Vector2(Main.RenderTargetDestination.Width / 2f + 500 - Font.MeasureString(EquationsFinished1[i]).Y / 2f, Main.RenderTargetDestination.Height * 0.025f + 50 + (35 * i)), Color.White);
+            }
 
 
             for (var i = 0; i < 18; i++)
@@ -403,7 +460,14 @@ namespace Luhe
             {            
                 for (int i2 = 0; i2 < 6; i2++)
                 {
-                    spriteBatch.DrawString(Font, Numbers[i2].Number, new Vector2(Numbers[i2].X + 16 - Font.MeasureString(Numbers[i2].Number).X / 2f + BackgroundOffsetX, Numbers[i2].Y + 16 - Font.MeasureString(Numbers[i2].Number).Y / 3f + BackgroundOffsetY), Color.White);
+                    float scale = 1f;
+                    float positionFixer = 0f;
+                    if (Phase != 2 && int.Parse(Numbers[i2].Number) < -9)
+                    {
+                        scale = 0.65f;
+                        positionFixer = 7f;
+                    }
+                    spriteBatch.DrawString(Font, Numbers[i2].Number, new Vector2(Numbers[i2].X + 16 - Font.MeasureString(Numbers[i2].Number).X / 2f + BackgroundOffsetX + positionFixer, Numbers[i2].Y + 16 - Font.MeasureString(Numbers[i2].Number).Y / 3f + BackgroundOffsetY + (positionFixer / 2f)), Color.White, 0f, default, scale, SpriteEffects.None, 1f);
                 }      
             }
 
@@ -447,14 +511,42 @@ namespace Luhe
 
             }
         }
-        public int GetNumberSpawn()
+        public Vector2 GetNumberSpawn()
         {
-            var spawn = Main.Random.Next(0, 18) * Grid;
-            while (Math.Abs(OurSnake.X - spawn) < 4 || Math.Abs(OurSnake.Y - spawn) < 4)
-            {
-                spawn = Main.Random.Next(0, 18) * Grid;
+            var willTouchSnake = true;
+            var spawnX = Main.Random.Next(0, 18) * Grid;
+            var spawnY = Main.Random.Next(0, 18) * Grid;
+
+            while (willTouchSnake)
+            {             
+                spawnX = Main.Random.Next(0, 18) * Grid;
+                spawnY = Main.Random.Next(0, 18) * Grid;
+                while (OurSnake.X == spawnX)
+                {
+                    spawnX = Main.Random.Next(0, 18) * Grid;
+                }
+                while (OurSnake.Y == spawnY)
+                {
+                    spawnY = Main.Random.Next(0, 18) * Grid;
+                }
+                willTouchSnake = false;
+                foreach (NumberObject number in Numbers)
+                {
+                    if (spawnX == number.X && spawnY == number.Y)
+                    {
+                        willTouchSnake = true;
+                    }
+                }
+                willTouchSnake = false;
+                foreach (Vector2 position in OurSnake.Cells)
+                {
+                    if (spawnX == position.X && spawnY == position.Y)
+                    {
+                        willTouchSnake = true;
+                    }
+                }
             }
-            return spawn;
+            return new Vector2(spawnX, spawnY);
         }
 
         public class NumberObject
@@ -465,11 +557,12 @@ namespace Luhe
         }
         public class Snake
         {
-            public int X = 160;
+            public int X = 160; //5 * 32 (Grid)
             public int Y = 160;
             public int DX = 32; //Grid
             public int DY = 0;
             public List<Vector2> Cells = new List<Vector2>();
+
             public int MaxCells = 4;
         }
     }
