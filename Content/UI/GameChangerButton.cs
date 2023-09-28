@@ -16,6 +16,7 @@ namespace Luhe.Content.UI
     public class GameChangerButton : UIButton
     {
         public Jogo Jogo;
+        public Texture2D Outline;
         public GameChangerButton(Texture2D texture, Jogo jogo) : base(texture)
         {
             Jogo = jogo;
@@ -33,15 +34,12 @@ namespace Luhe.Content.UI
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            base.Draw(gameTime, spriteBatch);
+            spriteBatch.Draw(Texture, Rectangle, Color);
             if (IsHovering)
             {
-                Color = Color.LightGray;
+                spriteBatch.Draw(Outline, Rectangle, Color.White);
             }
-            else
-            {
-                Color = Color.White;
-            }
-            base.Draw(gameTime, spriteBatch);
         }
     }
 }

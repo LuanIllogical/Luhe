@@ -46,6 +46,7 @@ namespace Luhe
         public int Phase;
         public int CorrectAnswer;
 
+        public List<Keys> DirectionsToTurn = new List<Keys>();
         public Snake OurSnake;
 
         public int BackgroundOffsetX;
@@ -62,9 +63,10 @@ namespace Luhe
 
         public override void Initialize()
         {
+            base.Initialize();
             OurSnake = new Snake();
-            BackgroundOffsetX = (int)(Main.RenderTargetDestination.Width / 2f - 288);
-            BackgroundOffsetY = (int)(Main.RenderTargetDestination.Height / 2f) - 288;
+            BackgroundOffsetX = (int)(WidthOriginal / 2f - 288);
+            BackgroundOffsetY = (int)(HeightOriginal / 2f) - 288;
             OurSnake.Cells.Add(new Vector2(5 * 32, 5 * 32));
             Move = Main.LoadedSounds["MathSnakeMove"].CreateInstance();
             Collect = Main.LoadedSounds["MathSnakeCollect"].CreateInstance();
@@ -72,13 +74,49 @@ namespace Luhe
         }
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             /*
             foreach (var uiElement in UIElements)
             {
                 uiElement.Update(gameTime);
             }
             */
-            if (++Count < 6)
+            KeyboardState state = Keyboard.GetState();
+            float pitch = (float)Main.Random.NextDouble() * 0.5f;
+            if (state.IsKeyDown(Keys.Left) && OurSnake.DX == 0)
+            {
+                DirectionsToTurn.Add(Keys.Left);
+                OurSnake.DX = -Grid;
+                OurSnake.DY = 0;
+                Move.Stop();
+                Move.Pitch = pitch;
+                Move.Play();
+            }
+            else if (state.IsKeyDown(Keys.Up) && OurSnake.DY == 0)
+            {
+                OurSnake.DY = -Grid;
+                OurSnake.DX = 0;
+                Move.Stop();
+                Move.Pitch = pitch;
+                Move.Play();
+            }
+            else if (state.IsKeyDown(Keys.Right) && OurSnake.DX == 0)
+            {
+                OurSnake.DX = Grid;
+                OurSnake.DY = 0; ;
+                Move.Stop();
+                Move.Pitch = pitch;
+                Move.Play();
+            }
+            else if (state.IsKeyDown(Keys.Down) && OurSnake.DY == 0)
+            {
+                OurSnake.DY = Grid;
+                OurSnake.DX = 0;
+                Move.Stop();
+                Move.Pitch = pitch;
+                Move.Play();
+            }
+            if (++Count < 8)
             {
                 return;
             }
@@ -99,8 +137,8 @@ namespace Luhe
             //Sons
             if (Wait == 0)
             {
-                KeyboardState state = Keyboard.GetState();
-                float pitch = (float)Main.Random.NextDouble() * 0.5f;
+                
+                
                 if (state.IsKeyDown(Keys.Back))
                 {
                     Main.JogoAtual = new Menu(graphics, spriteBatch, Font);
@@ -126,7 +164,8 @@ namespace Luhe
                         FirstNumber = "□";
                         Operator = "□";
                         SecondNumber = "□";
-
+                        EquationsFinished1.Clear();
+                        EquationsFinished2.Clear();
                         if (Points > Highscore)
                         {
                             Highscore = Points;
@@ -146,38 +185,7 @@ namespace Luhe
                 if (Auto)
                 {
                 }
-                if (state.IsKeyDown(Keys.Left) && OurSnake.DX == 0)
-                {
-                    OurSnake.DX = -Grid;
-                    OurSnake.DY = 0;
-                    Move.Stop();
-                    Move.Pitch = pitch;
-                    Move.Play();
-                }
-                else if (state.IsKeyDown(Keys.Up) && OurSnake.DY == 0)
-                {
-                    OurSnake.DY = -Grid;
-                    OurSnake.DX = 0;
-                    Move.Stop();
-                    Move.Pitch = pitch;
-                    Move.Play();
-                }
-                else if (state.IsKeyDown(Keys.Right) && OurSnake.DX == 0)
-                {
-                    OurSnake.DX = Grid;
-                    OurSnake.DY = 0;;
-                    Move.Stop();
-                    Move.Pitch = pitch;
-                    Move.Play();
-                }
-                else if (state.IsKeyDown(Keys.Down) && OurSnake.DY == 0)
-                {
-                    OurSnake.DY = Grid;
-                    OurSnake.DX = 0;
-                    Move.Stop();
-                    Move.Pitch = pitch;
-                    Move.Play();
-                }
+
                 if (SnakeDead == false)
                 {
                     OurSnake.X += OurSnake.DX;
@@ -422,22 +430,23 @@ namespace Luhe
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(Font, FirstNumber, new Vector2(Main.RenderTargetDestination.Width / 2f - 50 - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
-            spriteBatch.DrawString(Font, Operator, new Vector2(Main.RenderTargetDestination.Width / 2f - 25 - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
-            spriteBatch.DrawString(Font, SecondNumber, new Vector2(Main.RenderTargetDestination.Width / 2f - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
-            spriteBatch.DrawString(Font, "=", new Vector2(Main.RenderTargetDestination.Width / 2f + 25 - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
-            spriteBatch.DrawString(Font, Result, new Vector2(Main.RenderTargetDestination.Width / 2f + 50 - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
-            spriteBatch.DrawString(Font, "Pontos: " + Points, new Vector2(Main.RenderTargetDestination.Width * 0.05f - Font.MeasureString(SecondNumber).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
-            spriteBatch.DrawString(Font, "Highscore: " + Highscore, new Vector2(Main.RenderTargetDestination.Width * 0.875f - Font.MeasureString("Highscore: " + Highscore).X / 2f, Main.RenderTargetDestination.Height * 0.025f), Color.White);
+            base.Draw(gameTime, spriteBatch);
+            spriteBatch.DrawString(Font, FirstNumber, new Vector2(WidthOriginal / 2f - 50 - Font.MeasureString(SecondNumber).X / 2f, HeightOriginal * 0.025f), Color.White);
+            spriteBatch.DrawString(Font, Operator, new Vector2(WidthOriginal / 2f - 25 - Font.MeasureString(SecondNumber).X / 2f, HeightOriginal * 0.025f), Color.White);
+            spriteBatch.DrawString(Font, SecondNumber, new Vector2(WidthOriginal / 2f - Font.MeasureString(SecondNumber).X / 2f, HeightOriginal * 0.025f), Color.White);
+            spriteBatch.DrawString(Font, "=", new Vector2(WidthOriginal / 2f + 25 - Font.MeasureString(SecondNumber).X / 2f, HeightOriginal * 0.025f), Color.White);
+            spriteBatch.DrawString(Font, Result, new Vector2(WidthOriginal / 2f + 50 - Font.MeasureString(SecondNumber).X / 2f, HeightOriginal * 0.025f), Color.White);
+            spriteBatch.DrawString(Font, "Pontos: " + Points, new Vector2(WidthOriginal * 0.05f - Font.MeasureString(SecondNumber).X / 2f, HeightOriginal * 0.025f), Color.White);
+            spriteBatch.DrawString(Font, "Highscore: " + Highscore, new Vector2(WidthOriginal * 0.875f - Font.MeasureString("Highscore: " + Highscore).X / 2f, HeightOriginal * 0.025f), Color.White);
             //FIX MEASURESTRING SECONDNUMBER
 
             for (var i = 0; i < EquationsFinished1.Count; i++)
             {
-                spriteBatch.DrawString(Font, EquationsFinished1[i], new Vector2(Main.RenderTargetDestination.Width / 2f - 500 - Font.MeasureString(EquationsFinished1[i]).X / 2f, Main.RenderTargetDestination.Height * 0.025f + 50 + (35 * i)), Color.White);
+                spriteBatch.DrawString(Font, EquationsFinished1[i], new Vector2(WidthOriginal / 2f - 500 - Font.MeasureString(EquationsFinished1[i]).X / 2f, HeightOriginal * 0.025f + 50 + (35 * i)), Color.White);
             }
             for (var i = 0; i < EquationsFinished2.Count; i++)
             {
-                spriteBatch.DrawString(Font, EquationsFinished2[i], new Vector2(Main.RenderTargetDestination.Width / 2f + 500 - Font.MeasureString(EquationsFinished1[i]).Y / 2f, Main.RenderTargetDestination.Height * 0.025f + 50 + (35 * i)), Color.White);
+                spriteBatch.DrawString(Font, EquationsFinished2[i], new Vector2(WidthOriginal / 2f + 500 - Font.MeasureString(EquationsFinished1[i]).X / 2f, HeightOriginal * 0.025f + 50 + (35 * i)), Color.White);
             }
 
 
@@ -506,8 +515,8 @@ namespace Luhe
             }
             if (SnakeDead == true)
             {
-                spriteBatch.DrawString(Font, "Game Over", new Vector2(Main.RenderTargetDestination.Width * 0.5f - Font.MeasureString("Game Over").X * 1.4f / 2f, Main.RenderTargetDestination.Height * 0.4f - Font.MeasureString("Game Over").Y / 2f), new Color(204, 239, 255), 0f, default, 1.4f, SpriteEffects.None, 1f);
-                spriteBatch.DrawString(Font, "Aperte qualquer seta para reiniciar", new Vector2(Main.RenderTargetDestination.Width * 0.5f - Font.MeasureString("Aperte qualquer seta para reiniciar").X / 2f, Main.RenderTargetDestination.Height * 0.5f - Font.MeasureString("Aperte qualquer seta para reiniciar").Y / 2f), new Color(204, 239, 255), 0f, default, 1f, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(Font, "Game Over", new Vector2(WidthOriginal * 0.5f - Font.MeasureString("Game Over").X * 1.4f / 2f, HeightOriginal * 0.4f - Font.MeasureString("Game Over").Y / 2f), new Color(204, 239, 255), 0f, default, 1.4f, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(Font, "Aperte qualquer seta para reiniciar", new Vector2(WidthOriginal * 0.5f - Font.MeasureString("Aperte qualquer seta para reiniciar").X / 2f, HeightOriginal * 0.5f - Font.MeasureString("Aperte qualquer seta para reiniciar").Y / 2f), new Color(204, 239, 255), 0f, default, 1f, SpriteEffects.None, 1f);
 
             }
         }

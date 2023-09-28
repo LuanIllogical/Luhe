@@ -19,6 +19,10 @@ namespace Luhe
         public MouseStateWrapper mouseWrapper;
         public List<UIElement> UIElements;
 
+        public int WidthOriginal;
+        public int HeightOriginal;
+        public int A;
+
         public Color BackgroundColor;
         public int Tipo;
 
@@ -32,12 +36,24 @@ namespace Luhe
 
         public virtual void Initialize()
         {
+            UIElements = new List<UIElement>();
+
+            WidthOriginal = Main.RenderTargetDestination.Width;
+            HeightOriginal = Main.RenderTargetDestination.Height;
         }
         public virtual void Update(GameTime gameTime)
         {
+            foreach (var uiElement in UIElements)
+            {
+                uiElement.Update(gameTime);
+            }
         }
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            foreach (var uiElement in UIElements)
+            {
+                uiElement.Draw(gameTime, spriteBatch);
+            }
         }
     }
 }

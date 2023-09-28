@@ -21,45 +21,24 @@ namespace Luhe
 
         public override void Initialize()
         {
-            var SnakeButton = new SnakeButton(Main.LoadedTextures["MathSnakeButton"], new MathSnake(graphics, spriteBatch, Font))
+            base.Initialize();
+            var SnakeButton = new GameChangerButton(Main.LoadedTextures["MathSnakeButton"], new MathSnake(graphics, spriteBatch, Font))
             {
                 Position = new Vector2(Main.RenderTargetDestination.Width * 0.05f, Main.RenderTargetDestination.Height * 0.05f),
                 Outline = Main.LoadedTextures["MathSnakeButtonOutline"]
             };
+
+            var TriviaButton = new GameChangerButton(Main.LoadedTextures["MathSnakeButton"], new BatalhaTrivia(graphics, spriteBatch, Font))
+            {
+                Position = new Vector2(Main.RenderTargetDestination.Width * 0.25f, Main.RenderTargetDestination.Height * 0.05f),
+                Outline = Main.LoadedTextures["MathSnakeButtonOutline"]
+            };
+
             UIElements = new List<UIElement>()
             {
-                SnakeButton
+                SnakeButton,
+                TriviaButton
             };
-        }
-        public override void Update(GameTime gameTime)
-        {
-            foreach (var uiElement in UIElements)
-            {
-                uiElement.Update(gameTime);
-            }
-        }
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            foreach (var uiElement in UIElements)
-            {
-                uiElement.Draw(gameTime, spriteBatch);
-            }
-        }
-    }
-    public class SnakeButton : GameChangerButton
-    {
-        public Texture2D Outline;
-        public SnakeButton(Texture2D texture, Jogo jogo) : base (texture, jogo)
-        {
-            Jogo = jogo;
-        }
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(Texture, Rectangle, Color);
-            if (IsHovering)
-            {
-                spriteBatch.Draw(Outline, Rectangle, Color.White);
-            }
         }
     }
 
