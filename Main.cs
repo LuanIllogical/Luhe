@@ -83,6 +83,11 @@ namespace Luhe
             LoadedSounds["MathSnakeCollect"] = Content.Load<SoundEffect>("Sounds/MathSnakeCollect");
             LoadedSounds["MathSnakeDie"] = Content.Load<SoundEffect>("Sounds/MathSnakeDie");
 
+            LoadedTextures["TriviaButton"] = Content.Load<Texture2D>("UI/TriviaButton");
+            LoadedTextures["TriviaButtonOutline"] = Content.Load<Texture2D>("UI/TriviaButtonOutline");
+            LoadedTextures["DS"] = Content.Load<Texture2D>("UI/DS");
+            LoadedTextures["KeyTexture"] = Content.Load<Texture2D>("UI/Key");
+
             Font = Content.Load<SpriteFont>("Fonts/Font");
 
             JogoAtual = new Menu(graphics, spriteBatch, Font);

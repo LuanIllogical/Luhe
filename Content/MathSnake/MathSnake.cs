@@ -12,12 +12,11 @@ using System.ComponentModel;
 using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
 using MonoGame.Extended.Collisions;
-using static Luhe.MathSnake;
 using MonoGame.Extended.BitmapFonts;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework.Audio;
 
-namespace Luhe
+namespace Luhe.Content
 {
     public class MathSnake : Jogo
     {

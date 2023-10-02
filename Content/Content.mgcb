@@ -34,12 +34,6 @@
 
 #begin Sounds/MathSnakeMove.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Sounds/MathSnakeMove.mp3
-
-#begin Sounds/MathSnakeMove.mp3
-/importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/MathSnakeMove.mp3
@@ -55,6 +49,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/Arrow.png
+
+#begin UI/DS.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/DS.png
+
+#begin UI/Key.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/Key.png
 
 #begin UI/MagicRectangle.png
 /importer:TextureImporter
@@ -91,4 +109,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/MathSnakeButtonOutline.png
+
+#begin UI/TriviaButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/TriviaButton.png
+
+#begin UI/TriviaButtonOutline.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/TriviaButtonOutline.png
 

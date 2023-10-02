@@ -16,7 +16,6 @@ namespace Luhe.Content.UI
     public class UIButton : UIElement
     {
         private MouseState CurrentMouse;
-        //public Color PenColor { get; set; }
         //public string Text { get; set; }
 
         public UIButton(Texture2D texture)
@@ -26,15 +25,22 @@ namespace Luhe.Content.UI
             //Font = font;
             //PenColor = Color.Red;
         }
+        /*
+        public event EventHandler OnClick;
+        */
         public virtual void Click()
         {
+
         }
+        /*
+        public event EventHandler OnRightClick;
+        */
         public virtual void RightClick()
         {
+
         }
         public override void Update(GameTime gameTime)
         {
-
             var mouseRectangle = new Rectangle((int)Main.MousePosition.X, (int)Main.MousePosition.Y, 1, 1);
 
             IsHovering = false;
@@ -45,10 +51,12 @@ namespace Luhe.Content.UI
 
                 if (MouseExtended.GetState().WasButtonJustDown(MouseButton.Left))
                 {
+                 //   OnClick?.Invoke(this, new EventArgs());
                     Click();
                 }
                 else if (MouseExtended.GetState().WasButtonJustDown(MouseButton.Right))
                 {
+                   // OnRightClick?.Invoke(this, new EventArgs());
                     RightClick();
                 }
             }
