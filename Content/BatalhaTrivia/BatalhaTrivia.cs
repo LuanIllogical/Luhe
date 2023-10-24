@@ -19,6 +19,7 @@ using System.Text;
 using System.Linq;
 using System.Collections;
 using System.Runtime.ConstrainedExecution;
+using static System.Net.WebRequestMethods;
 
 namespace Luhe.Content
 {
@@ -203,10 +204,10 @@ namespace Luhe.Content
                 };
                 UIElements.Add(Literatura[i]);
             }
-            Literatura[0].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            Literatura[1].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            Literatura[2].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            Literatura[3].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
+            Literatura[0].Questions = new List<string>() { string.Join('\n', Helper.SplitString("A essência da literatura se encontra em qual aspecto?", 1200, Font)) + "*Palavras*RimasLivros*Histórias" };
+            Literatura[1].Questions = new List<string>() { string.Join('\n', Helper.SplitString("A literatura é considerada qual arte?", 1200, Font)) + "*A sexta (6ª)*A primeira (1ª)*A quarta (4ª)*A sétima (7ª)" };
+            Literatura[2].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Qual o livro que inaugurou o Barroco no Brasil?", 1200, Font)) + "*Prosopopeia*Os sermões*Inconstância dos bens do mundo*A Cristo N. S. crucificado" };
+            Literatura[3].Questions = new List<string>() { string.Join('\n', Helper.SplitString("A segunda fase do Modernismo no Brasil ocorreu entre quais anos?", 1200, Font)) + "*1930 e 1945*1945 e 1960*1915 e 1930*1960 e 1975" };
 
             Ingles = new DifficultySelector[4];
             for (int i = 0; i < 4; i++)
@@ -219,10 +220,10 @@ namespace Luhe.Content
                 };
                 UIElements.Add(Ingles[i]);
             }
-            Ingles[0].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            Ingles[1].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            Ingles[2].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            Ingles[3].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
+            Ingles[0].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Como se diz \"Meu nome é\" em inglês?", 1200, Font)) + "*My name is*Meu nume es*My nome is*Mai naime é" };
+            Ingles[1].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Como que a palavra \"Cozinhar\" fica em inglês?", 1200, Font)) + "*Cook*Cozin*Kitchen*Kitchinhar" };
+            Ingles[2].Questions = new List<string>() { string.Join('\n', Helper.SplitString("I __________ the house three times yesterday. Preencha a lacuna com a forma afirmativa de \"to clean\".", 1200, Font)) + "*cleaned*cleant*clend*clenand" };
+            Ingles[3].Questions = new List<string>() { string.Join('\n', Helper.SplitString("When Carlos has a headache, he __________ some tea.", 1200, Font)) + "*drinks*is drinking*drank*used to drink" };
 
             FiloSocio = new DifficultySelector[4];
             for (int i = 0; i < 4; i++)
@@ -235,10 +236,10 @@ namespace Luhe.Content
                 };
                 UIElements.Add(FiloSocio[i]);
             }
-            FiloSocio[0].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            FiloSocio[1].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            FiloSocio[2].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
-            FiloSocio[3].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Pergunta em branco", 1200, Font)) + "*Resposta certa*Resposta errada 1*Resposta errada 2*Resposta errada 3" };
+            FiloSocio[0].Questions = new List<string>() { string.Join('\n', Helper.SplitString("Quem escreveu a Alegoria da Caverna?", 1200, Font)) + "*Platão*Sócrates*Aristóteles*Heráclito" };
+            FiloSocio[1].Questions = new List<string>() { string.Join('\n', Helper.SplitString("\"O ser é e o não ser não é; este é o caminho da convicção, pois conduz à verdade. (...) Pois pensar e ser é o mesmo.\"\n\nO trecho do Poema de Parmênides revela um princípio fundamental de sua filosofia. Qual é esse princípio?", 1200, Font)) + "*Imutabilidade e permanência*Desprezo da fé*Mobilidade*Centralidade em questões políticas" };
+            FiloSocio[2].Questions = new List<string>() { string.Join('\n', Helper.SplitString("René Descartes desenvolveu um método filosófico baseado na dúvida para encontrar uma certeza na qual possa fundamentar o conhecimento seguro. Essa certeza fundamental de Descartes é chamada de cogito e sua formulação principal diz:", 1200, Font)) + "*\"Penso, logo existo\"*\"Deus sive natura\"*\"Conhece-te a ti mesmo\"*\"Só sei que nada sei\"" };
+            FiloSocio[3].Questions = new List<string>() { string.Join('\n', Helper.SplitString("No sistema capitalista, as muitas manifestações de crise criam condições que forçam a algum tipo de racionalização. Em geral, essas crises periódicas têm o efeito de expandir a capacidade produtiva e de renovar as condições de acumulação. Podemos conceber cada crise como uma mudança do processo de acumulação para um nível novo e superior.\n\nA condição para a inclusão dos trabalhadores no novo processo produtivo descrito no texto é a:", 1200, Font)) + "*Qualificação profissional*Associação sindical*Participação eleitoral*Regulamentação funcional" };
         }
         public override void Update(GameTime gameTime)
         {
